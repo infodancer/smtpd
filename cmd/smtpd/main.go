@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/infodancer/maildir"
 	"github.com/infodancer/msgstore"
+	_ "github.com/infodancer/msgstore/maildir" // Register maildir storage backend
 	"github.com/infodancer/smtpd/internal/config"
 	"github.com/infodancer/smtpd/internal/metrics"
 	"github.com/infodancer/smtpd/internal/server"
@@ -45,9 +45,19 @@ func main() {
 
 	// Create delivery agent if configured
 	var delivery msgstore.DeliveryAgent
-	if cfg.Delivery.Maildir != "" {
-		delivery = maildir.NewDelivery(cfg.Delivery.Maildir)
-		srv.Logger().Info("maildir delivery enabled", "path", cfg.Delivery.Maildir)
+	if cfg.Delivery.Type != "" {
+		storeConfig := msgstore.StoreConfig{
+			Type:     cfg.Delivery.Type,
+			BasePath: cfg.Delivery.BasePath,
+			Options:  cfg.Delivery.Options,
+		}
+		store, err := msgstore.Open(storeConfig)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error creating delivery agent: %v\n", err)
+			os.Exit(1)
+		}
+		delivery = store
+		srv.Logger().Info("delivery enabled", "type", cfg.Delivery.Type, "path", cfg.Delivery.BasePath)
 	}
 
 	// Create and set the SMTP handler
