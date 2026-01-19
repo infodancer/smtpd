@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/infodancer/maildir"
+	"github.com/infodancer/msgstore"
 	"github.com/infodancer/smtpd/internal/config"
 	"github.com/infodancer/smtpd/internal/metrics"
 	"github.com/infodancer/smtpd/internal/server"
@@ -41,10 +43,15 @@ func main() {
 		collector = metrics.NewPrometheusCollector(prometheus.DefaultRegisterer)
 	}
 
+	// Create delivery agent if configured
+	var delivery msgstore.DeliveryAgent
+	if cfg.Delivery.Maildir != "" {
+		delivery = maildir.NewDelivery(cfg.Delivery.Maildir)
+		srv.Logger().Info("maildir delivery enabled", "path", cfg.Delivery.Maildir)
+	}
+
 	// Create and set the SMTP handler
-	// Note: delivery agent is nil for now - messages will be rejected
-	// TODO: Wire up actual message storage once msgstore is configured
-	handler := smtp.Handler(cfg.Hostname, collector, nil)
+	handler := smtp.Handler(cfg.Hostname, collector, delivery)
 	srv.SetHandler(handler)
 
 	// Set up context with signal handling for graceful shutdown
