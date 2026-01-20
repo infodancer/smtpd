@@ -14,6 +14,7 @@ import (
 	"github.com/infodancer/msgstore"
 	_ "github.com/infodancer/msgstore/maildir" // Register maildir storage backend
 	"github.com/infodancer/smtpd/internal/config"
+	"github.com/infodancer/auth/domain"
 	"github.com/infodancer/smtpd/internal/logging"
 	"github.com/infodancer/smtpd/internal/metrics"
 	"github.com/infodancer/smtpd/internal/rspamd"
@@ -111,11 +112,24 @@ func main() {
 		}()
 	}
 
+	// Create domain provider if configured
+	var domainProvider domain.DomainProvider
+	if cfg.DomainsPath != "" {
+		domainProvider = domain.NewFilesystemDomainProvider(cfg.DomainsPath, logger)
+		defer func() {
+			if err := domainProvider.Close(); err != nil {
+				logger.Error("error closing domain provider", "error", err)
+			}
+		}()
+		logger.Info("domain provider enabled", "path", cfg.DomainsPath)
+	}
+
 	// Create the go-smtp backend
 	backend := smtp.NewBackend(smtp.BackendConfig{
 		Hostname:       cfg.Hostname,
 		Delivery:       delivery,
 		AuthAgent:      authAgent,
+		DomainProvider: domainProvider,
 		SpamChecker:    spamChecker,
 		SpamConfig:     spamCheckConfig,
 		Collector:      collector,
