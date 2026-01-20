@@ -10,7 +10,7 @@ import (
 	"github.com/infodancer/msgstore"
 	"github.com/infodancer/smtpd/internal/config"
 	"github.com/infodancer/smtpd/internal/metrics"
-	"github.com/infodancer/smtpd/internal/oauth"
+	"github.com/infodancer/auth/oauth"
 	"github.com/infodancer/smtpd/internal/spamcheck"
 )
 
