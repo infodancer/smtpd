@@ -7,10 +7,11 @@ import (
 	"github.com/emersion/go-smtp"
 	"github.com/infodancer/auth"
 	"github.com/infodancer/auth/domain"
+	"github.com/infodancer/auth/oauth"
 	"github.com/infodancer/msgstore"
 	"github.com/infodancer/smtpd/internal/config"
 	"github.com/infodancer/smtpd/internal/metrics"
-	"github.com/infodancer/auth/oauth"
+	"github.com/infodancer/smtpd/internal/queue"
 	"github.com/infodancer/smtpd/internal/spamcheck"
 )
 
@@ -19,6 +20,7 @@ import (
 type Backend struct {
 	hostname       string
 	delivery       msgstore.DeliveryAgent
+	queueCfg       queue.Config
 	authAgent      auth.AuthenticationAgent
 	authRouter     *domain.AuthRouter
 	oauthAgent     oauth.Agent
@@ -36,6 +38,7 @@ type Backend struct {
 type BackendConfig struct {
 	Hostname       string
 	Delivery       msgstore.DeliveryAgent
+	QueueConfig    queue.Config
 	AuthAgent      auth.AuthenticationAgent
 	AuthRouter     *domain.AuthRouter
 	OAuthAgent     oauth.Agent
@@ -62,6 +65,7 @@ func NewBackend(cfg BackendConfig) *Backend {
 	return &Backend{
 		hostname:       cfg.Hostname,
 		delivery:       cfg.Delivery,
+		queueCfg:       cfg.QueueConfig,
 		authAgent:      cfg.AuthAgent,
 		authRouter:     cfg.AuthRouter,
 		oauthAgent:     cfg.OAuthAgent,
