@@ -19,10 +19,10 @@ import (
 	"syscall"
 	"time"
 
-	_ "github.com/infodancer/auth/passwd"
 	"github.com/infodancer/auth/domain"
-	_ "github.com/infodancer/msgstore/maildir"
+	_ "github.com/infodancer/auth/passwd"
 	"github.com/infodancer/msgstore"
+	_ "github.com/infodancer/msgstore/maildir"
 	"github.com/infodancer/smtpd/internal/config"
 	"github.com/infodancer/smtpd/internal/maildeliver"
 )
@@ -91,6 +91,13 @@ func run() error {
 	}
 	if req.ClientIP != "" {
 		envelope.ClientIP = net.ParseIP(req.ClientIP)
+	}
+	if req.SpamAction != "" {
+		envelope.SpamResult = &msgstore.SpamResult{
+			Score:   req.SpamScore,
+			Action:  req.SpamAction,
+			Checker: req.SpamChecker,
+		}
 	}
 
 	// Build global delivery agent from config (fallback when no per-domain config).
