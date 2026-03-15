@@ -7,8 +7,6 @@ import (
 	"net"
 	"os"
 
-	_ "github.com/infodancer/auth/passwd"      // Register passwd auth backend
-	_ "github.com/infodancer/msgstore/maildir" // Register maildir storage backend
 	"github.com/infodancer/smtpd/internal/config"
 	"github.com/infodancer/smtpd/internal/logging"
 	"github.com/infodancer/smtpd/internal/metrics"
