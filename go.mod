@@ -8,7 +8,7 @@ require (
 	github.com/emersion/go-smtp v0.24.0
 	github.com/infodancer/auth v0.1.15
 	github.com/infodancer/mail-session v0.1.4
-	github.com/infodancer/session-manager v0.1.4
+	github.com/infodancer/session-manager v0.1.5
 	github.com/pelletier/go-toml/v2 v2.2.4
 	github.com/prometheus/client_golang v1.23.2
 	github.com/redis/go-redis/v9 v9.18.0
