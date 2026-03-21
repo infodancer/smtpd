@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/emersion/go-smtp"
+	"github.com/infodancer/logging"
 	"github.com/infodancer/smtpd/internal/config"
-	"github.com/infodancer/smtpd/internal/logging"
 	"github.com/infodancer/smtpd/internal/metrics"
 	"github.com/infodancer/smtpd/internal/spamcheck"
 	"github.com/redis/go-redis/v9"

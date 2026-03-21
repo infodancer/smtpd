@@ -7,8 +7,8 @@ import (
 	"net"
 	"os"
 
+	"github.com/infodancer/logging"
 	"github.com/infodancer/smtpd/internal/config"
-	"github.com/infodancer/smtpd/internal/logging"
 	"github.com/infodancer/smtpd/internal/metrics"
 	"github.com/infodancer/smtpd/internal/smtp"
 )

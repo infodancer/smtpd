@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"syscall"
 
+	"github.com/infodancer/logging"
 	"github.com/infodancer/smtpd/internal/config"
-	"github.com/infodancer/smtpd/internal/logging"
 	"github.com/infodancer/smtpd/internal/metrics"
 	"github.com/infodancer/smtpd/internal/rspamd"
 	"github.com/infodancer/smtpd/internal/smtp"
